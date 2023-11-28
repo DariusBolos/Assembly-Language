@@ -1,0 +1,46 @@
+AX = AH:AL 8 biti fiecare
+BX
+CX
+DX
+Si // operatii cu siruri
+Di // operatii cu siruri
+SP // operatii cu stiva
+BP // operatii cu stiva 
+
+// registrii pe 16 biti
+
+2 bytes formeaza un word (AX)
+2 words formeaza (EAX) D-register sau double (4 bytes) - la arhitectura pe 32 biti
+2 doubleuri formeaza un QUAD (RAX) - 2^64 valori - pe 64 biti
+RAX = R0 (in unele asambloare)
+R0....R15 - registrii pe 64 biti
+
+Operatii:
+-unare: INC AX, DEC BX
+-binare: MOV AX, BX
+         ADD AL, BL
+         ADC AH, 0  AH = AH + 0 + CF (carry flag): 0 sau 1
+         SUB EAX, EBX
+         SBB (sub with )
+
+XOR AH, AH - face registrul 0
+
+nasm -felf64 main.asm -o main.o -g
+gcc -no-pie main.o -o main.exe -g
+gdb -q main.exe
+lay asm
+lay reg
+start
+si
+q
+
+RAX, RDI, RSi, RDX
+read si write singurele functii cand lucram cu fisiere
+
+Tema de lab: afisati cifrele unui numar de 2 cifre
+
+Tema de lab 2: afisati cifrele invers 
+
+Cati biti folosesc registrii R8, R8D, R8W, R8b
+
+functie care citesete orice numar in asm
