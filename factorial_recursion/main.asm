@@ -1,14 +1,14 @@
 global main
 
 section .data
-    message db "Factorial of the number = "
+    message db "Factorial of the read digit is: "
     messageLen equ $- message
-    fact db 0
-    n db 0
-    cif db 0
+    n dd 0
+    digit db 0
+    space db ' '
 section .text
 
-readNumber: ; gets the number of which the factorial will be calculated
+readNumber: ; gets the digit of which the factorial will be calculated
     mov rax, 0
     mov rdi, 0
     mov rsi, n
@@ -16,54 +16,72 @@ readNumber: ; gets the number of which the factorial will be calculated
     syscall
     ret
 
-processFactorial:
-    cmp bl, 1
+
+printMessage:
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, message
+    mov rdx, messageLen
+    syscall
+    ret
+
+
+processFactorial: ; processes the calls of the calculateFactorial function
+    cmp bx, 1
     jg calculateFactorial
     mov ax, 1
     ret
 
-calculateFactorial:
-    dec bl
+
+calculateFactorial: ; calculates the factorial of the digit entered via the keyboard
+    dec bx
     call processFactorial
-    inc bl
-    mul bl
+    inc bx
+    mul bx
     ret
 
-printDigit:
+
+printDigit: ; prints a single digit of the result
     mov rax, 1
     mov rdi, 1
-    mov rsi, cif
+    mov rsi, digit
     mov rdx, 1
     syscall
     ret
 
-printNumber:
-    mov al, [n]
-    mov ah, 0
-    mov r8b, 10
-    div r8b
-    add ah, '0'
-    mov [cif], ah
-    push ax
-    call printDigit
-    pop ax
-    mov [n], al
-    cmp al, 0
-    ja printNumber
-    ret 
 
-main: 
+processPrintNumber: ; processes the calls for the printNumber function
+    cmp eax, 0
+    jg printNumberRecursive
+    ret
+
+
+printNumberRecursive: ; recursively prints the digits of the calculated factorial value
+    mov eax, [n]
+    mov dx, 0
+    mov r8d, 10
+    div r8d
+    mov [n], eax
+    push dx
+    call processPrintNumber
+    pop dx
+    add dx, '0'
+    mov [digit], dx
+    call printDigit
+    ret
+
+
+main: ; default main function
     call readNumber
+    xor rdx, rdx
     mov bx, [n]
     sub bx, '0'
     call processFactorial
     mov [n], ax
-    ;call printNumber
-    ;mov al, [fact]
-    ;mov [n], al
-    call printNumber
+    mov [n + 2], dx
+    call printMessage
+    call processPrintNumber
 
-    ; exiting the program
     mov rax, 60
     xor rdi, rdi
     syscall
