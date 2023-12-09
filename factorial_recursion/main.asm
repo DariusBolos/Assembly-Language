@@ -5,7 +5,7 @@ section .data
     messageLen equ $- message
     n dd 0
     digit db 0
-    space db ' '
+
 section .text
 
 readNumber: ; gets the digit of which the factorial will be calculated
